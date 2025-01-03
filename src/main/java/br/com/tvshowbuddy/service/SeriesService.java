@@ -31,13 +31,22 @@ public class SeriesService {
 
     public Optional<Series> updateSeries(Long id, Series updatedSeries) {
         return findById(id).map(series -> {
-            series.setName(updatedSeries.getName());
-            series.setGenre(updatedSeries.getGenre());
-            series.setReleaseYear(updatedSeries.getReleaseYear());
-            series.setSeasons(updatedSeries.getSeasons());
+            if (updatedSeries.getName() != null && !updatedSeries.getName().isEmpty()) {
+                series.setName(updatedSeries.getName());
+            }
+            if (updatedSeries.getGenre() != null && !updatedSeries.getGenre().isEmpty()) {
+                series.setGenre(updatedSeries.getGenre());
+            }
+            if (updatedSeries.getReleaseYear() > 0) {
+                series.setReleaseYear(updatedSeries.getReleaseYear());
+            }
+            if (updatedSeries.getSeasons() != null && !updatedSeries.getSeasons().isEmpty()) {
+                series.setSeasons(updatedSeries.getSeasons());
+            }
             return series;
         });
     }
+
 
     public boolean deleteSeries(Long id) {
         return seriesDatabase.removeIf(series -> series.getId().equals(id));
