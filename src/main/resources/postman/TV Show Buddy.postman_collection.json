@@ -1,0 +1,156 @@
+{
+	"info": {
+		"_postman_id": "eb5e5768-042e-46f7-b168-5d6050a3093a",
+		"name": "TV Show Buddy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6633765"
+	},
+	"item": [
+		{
+			"name": "Get All Series",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/series",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"series"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Series By ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/series/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"series",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1",
+							"description": "Required. Inform the series ID"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a new series",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"The Office\",\r\n  \"genre\": \"Comedy\",\r\n  \"releaseYear\": 2005,\r\n  \"seasons\": [\r\n    {\r\n      \"seasonNumber\": 1,\r\n      \"episodes\": 6\r\n    },\r\n    {\r\n      \"seasonNumber\": 2,\r\n      \"episodes\": 22\r\n    },\r\n    {\r\n      \"seasonNumber\": 3,\r\n      \"episodes\": 25\r\n    },\r\n    {\r\n      \"seasonNumber\": 4,\r\n      \"episodes\": 19\r\n    },\r\n    {\r\n      \"seasonNumber\": 5,\r\n      \"episodes\": 28\r\n    },\r\n    {\r\n      \"seasonNumber\": 6,\r\n      \"episodes\": 26\r\n    },\r\n    {\r\n      \"seasonNumber\": 7,\r\n      \"episodes\": 27\r\n    },\r\n    {\r\n      \"seasonNumber\": 8,\r\n      \"episodes\": 24\r\n    },\r\n    {\r\n      \"seasonNumber\": 9,\r\n      \"episodes\": 27\r\n    }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/series",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"series"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update a series",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"The Office (US)\",\r\n  \"genre\": \"Sitcom\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/series/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"series",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1",
+							"description": "Required. Inform the series ID"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a series",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"The Office\",\r\n  \"genre\": \"Comedy\",\r\n  \"releaseYear\": 2005,\r\n  \"seasons\": [\r\n    {\r\n      \"seasonNumber\": 1,\r\n      \"episodes\": 6\r\n    },\r\n    {\r\n      \"seasonNumber\": 2,\r\n      \"episodes\": 22\r\n    },\r\n    {\r\n      \"seasonNumber\": 3,\r\n      \"episodes\": 25\r\n    },\r\n    {\r\n      \"seasonNumber\": 4,\r\n      \"episodes\": 19\r\n    },\r\n    {\r\n      \"seasonNumber\": 5,\r\n      \"episodes\": 28\r\n    },\r\n    {\r\n      \"seasonNumber\": 6,\r\n      \"episodes\": 26\r\n    },\r\n    {\r\n      \"seasonNumber\": 7,\r\n      \"episodes\": 27\r\n    },\r\n    {\r\n      \"seasonNumber\": 8,\r\n      \"episodes\": 24\r\n    },\r\n    {\r\n      \"seasonNumber\": 9,\r\n      \"episodes\": 27\r\n    }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/series/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"series",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1",
+							"description": "Required. Inform the series ID"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
