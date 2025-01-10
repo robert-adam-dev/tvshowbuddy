@@ -31,22 +31,22 @@ public class SerieController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Series> getSeriesById(@PathVariable Long id) {
+    public ResponseEntity<Series> getSeriesById(@PathVariable String id) {
         Optional<Series> series = seriesService.findById(id);
         return series.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Series> updateSeries(@PathVariable Long id, @RequestBody Series updatedSeries) {
+    public ResponseEntity<Series> updateSeries(@PathVariable String id, @RequestBody Series updatedSeries) {
         Optional<Series> updated = seriesService.updateSeries(id, updatedSeries);
         return updated.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSeries(@PathVariable Long id) {
-        boolean deleted = seriesService.deleteSeries(id);
-        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    public ResponseEntity<Void> deleteSeries(@PathVariable String id) {
+        seriesService.deleteSeries(id);
+        return ResponseEntity.noContent().build();
     }
 }
