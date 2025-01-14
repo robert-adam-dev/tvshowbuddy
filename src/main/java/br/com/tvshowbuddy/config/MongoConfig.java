@@ -20,12 +20,6 @@ public class MongoConfig {
     @Value("${mongo.host}")
     private String mongoHost;
 
-    @Value("${mongo.port}")
-    private String mongoPort;
-
-    @Value("${mongo.database}")
-    private String mongoDatabase;
-
     @Bean
     public MongoClient mongoClient() {
         String connectionString = String.format(
