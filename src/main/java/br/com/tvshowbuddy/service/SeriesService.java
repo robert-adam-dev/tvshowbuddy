@@ -73,7 +73,7 @@ public class SeriesService {
                         existingSeries.getSeasons().sort(Comparator.comparingInt(Season::getSeasonNumber));
                     }
 
-                    return seriesRepository.save(existingSeries);
+                        return seriesRepository.save(existingSeries);
                 });
     }
 
