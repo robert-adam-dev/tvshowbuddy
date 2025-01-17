@@ -1,5 +1,7 @@
 package br.com.tvshowbuddy.controller;
 
+import br.com.tvshowbuddy.dto.SeriesDTO;
+import br.com.tvshowbuddy.mapper.SeriesMapper;
 import br.com.tvshowbuddy.model.Series;
 import br.com.tvshowbuddy.service.SeriesService;
 import lombok.RequiredArgsConstructor;
@@ -17,30 +19,40 @@ import java.util.Optional;
 public class SerieController {
 
     private final SeriesService seriesService;
+    private final SeriesMapper seriesMapper;
 
     @PostMapping
-    public ResponseEntity<Series> createSeries(@RequestBody Series series) {
+    public ResponseEntity<SeriesDTO> createSeries(@RequestBody SeriesDTO seriesDTO) {
+        Series series = seriesMapper.toEntity(seriesDTO);
         Series createdSeries = seriesService.createANewSeries(series);
-        return ResponseEntity.ok(createdSeries);
+        return ResponseEntity.ok(seriesMapper.toDTO(createdSeries));
     }
 
     @GetMapping
-    public ResponseEntity<List<Series>> getAllSeries() {
+    public ResponseEntity<List<SeriesDTO>> getAllSeries() {
         List<Series> seriesList = seriesService.listAllSeries();
-        return ResponseEntity.ok(seriesList);
+        List<SeriesDTO> seriesDTOs = seriesList.stream()
+                .map(seriesMapper::toDTO)
+                .toList();
+
+        return ResponseEntity.ok(seriesDTOs);
     }
 
+
     @GetMapping("/{id}")
-    public ResponseEntity<Series> getSeriesById(@PathVariable String id) {
+    public ResponseEntity<SeriesDTO> getSeriesById(@PathVariable String id) {
         Optional<Series> series = seriesService.findById(id);
-        return series.map(ResponseEntity::ok)
+        return series.map(s -> ResponseEntity.ok(seriesMapper.toDTO(s)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Series> updateSeries(@PathVariable String id, @RequestBody Series updatedSeries) {
+    public ResponseEntity<SeriesDTO> updateSeries(
+            @PathVariable String id,
+            @RequestBody SeriesDTO updatedSeriesDTO) {
+        Series updatedSeries = seriesMapper.toEntity(updatedSeriesDTO);
         Optional<Series> updated = seriesService.updateSeries(id, updatedSeries);
-        return updated.map(ResponseEntity::ok)
+        return updated.map(s -> ResponseEntity.ok(seriesMapper.toDTO(s)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
