@@ -8,9 +8,105 @@
 	"item": [
 		{
 			"name": "Get All Series",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/series",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"series"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a new series - The Office",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"The Office\",\r\n    \"genre\": \"Comedy\",\r\n    \"releaseYear\": 2005,\r\n    \"completed\": true,\r\n    \"seasons\": [\r\n        {\r\n            \"seasonNumber\": 1,\r\n            \"episodes\": 6\r\n        },\r\n        {\r\n            \"seasonNumber\": 2,\r\n            \"episodes\": 22\r\n        },\r\n        {\r\n            \"seasonNumber\": 3,\r\n            \"episodes\": 25\r\n        },\r\n        {\r\n            \"seasonNumber\": 4,\r\n            \"episodes\": 19\r\n        },\r\n        {\r\n            \"seasonNumber\": 5,\r\n            \"episodes\": 28\r\n        },\r\n        {\r\n            \"seasonNumber\": 6,\r\n            \"episodes\": 26\r\n        },\r\n        {\r\n            \"seasonNumber\": 7,\r\n            \"episodes\": 27\r\n        },\r\n        {\r\n            \"seasonNumber\": 8,\r\n            \"episodes\": 24\r\n        },\r\n        {\r\n            \"seasonNumber\": 9,\r\n            \"episodes\": 27\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/series",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"series"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a new series  - Ted Lasso",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Ted Lasso\",\r\n    \"genre\": \"Comedy, Drama, Sports\",\r\n    \"releaseYear\": 2020,\r\n    \"completed\": true,\r\n    \"seasons\": [\r\n        {\r\n            \"seasonNumber\": 1,\r\n            \"episodes\": 10\r\n        },\r\n        {\r\n            \"seasonNumber\": 2,\r\n            \"episodes\": 12\r\n        },\r\n        {\r\n            \"seasonNumber\": 3,\r\n            \"episodes\": 12\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/series",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"series"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a new series  - This is Us",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"This Is Us\",\r\n    \"genre\": \"Drama, Romance\",\r\n    \"completed\": false,\r\n    \"releaseYear\": 2016,\r\n    \"seasons\": [\r\n        {\r\n            \"seasonNumber\": 1,\r\n            \"episodes\": 18\r\n        },\r\n        {\r\n            \"seasonNumber\": 2,\r\n            \"episodes\": 18\r\n        },\r\n        {\r\n            \"seasonNumber\": 3,\r\n            \"episodes\": 18\r\n        },\r\n        {\r\n            \"seasonNumber\": 4,\r\n            \"episodes\": 18\r\n        },\r\n        {\r\n            \"seasonNumber\": 5,\r\n            \"episodes\": 16\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "http://localhost:8080/series",
 					"protocol": "http",
@@ -27,6 +123,18 @@
 		},
 		{
 			"name": "Get Series By ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -44,37 +152,9 @@
 					"variable": [
 						{
 							"key": "id",
-							"value": "1",
+							"value": "678ee324fed40831f2b1f9c4",
 							"description": "Required. Inform the series ID"
 						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create a new series",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"The Office\",\r\n  \"genre\": \"Comedy\",\r\n  \"releaseYear\": 2005,\r\n  \"seasons\": [\r\n    {\r\n      \"seasonNumber\": 1,\r\n      \"episodes\": 6\r\n    },\r\n    {\r\n      \"seasonNumber\": 2,\r\n      \"episodes\": 22\r\n    },\r\n    {\r\n      \"seasonNumber\": 3,\r\n      \"episodes\": 25\r\n    },\r\n    {\r\n      \"seasonNumber\": 4,\r\n      \"episodes\": 19\r\n    },\r\n    {\r\n      \"seasonNumber\": 5,\r\n      \"episodes\": 28\r\n    },\r\n    {\r\n      \"seasonNumber\": 6,\r\n      \"episodes\": 26\r\n    },\r\n    {\r\n      \"seasonNumber\": 7,\r\n      \"episodes\": 27\r\n    },\r\n    {\r\n      \"seasonNumber\": 8,\r\n      \"episodes\": 24\r\n    },\r\n    {\r\n      \"seasonNumber\": 9,\r\n      \"episodes\": 27\r\n    }\r\n  ]\r\n}\r\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/series",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"series"
 					]
 				}
 			},
@@ -87,7 +167,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"The Office (US)\",\r\n  \"genre\": \"Sitcom\"\r\n}\r\n",
+					"raw": "{\r\n    \"completed\": true,\r\n    \"seasons\": [\r\n        {\r\n            \"seasonNumber\": 6,\r\n            \"episodes\": 18\r\n        }\r\n    ]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -108,7 +188,7 @@
 					"variable": [
 						{
 							"key": "id",
-							"value": "1",
+							"value": "678efd845c7b2f6a4577d4a2",
 							"description": "Required. Inform the series ID"
 						}
 					]
@@ -144,7 +224,7 @@
 					"variable": [
 						{
 							"key": "id",
-							"value": "1",
+							"value": "678ee324fed40831f2b1f9c4",
 							"description": "Required. Inform the series ID"
 						}
 					]
