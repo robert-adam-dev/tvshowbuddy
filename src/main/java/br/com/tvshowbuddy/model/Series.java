@@ -20,4 +20,5 @@ public class Series {
     private String genre;
     private int releaseYear;
     private List<Season> seasons;
+    private boolean completed;
 }

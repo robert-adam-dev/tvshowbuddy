@@ -1,10 +1,13 @@
 package br.com.tvshowbuddy.service;
 
+import br.com.tvshowbuddy.dto.SeasonDTO;
+import br.com.tvshowbuddy.dto.SeriesUpdateDTO;
 import br.com.tvshowbuddy.model.Season;
 import br.com.tvshowbuddy.model.Series;
 import br.com.tvshowbuddy.repository.SeriesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -29,52 +32,51 @@ public class SeriesService {
         return seriesRepository.findById(id);
     }
 
-    public Optional<Series> updateSeries(String id, Series updatedSeries) {
-        return seriesRepository.findById(id)
-                .map(existingSeries -> {
+    @Transactional
+    public Optional<Series> updateSeries(String id, SeriesUpdateDTO updatedSeries) {
 
-                    if (updatedSeries.getName() != null && !updatedSeries.getName().trim().isEmpty()) {
-                        existingSeries.setName(updatedSeries.getName());
-                    }
+        Optional<Series> optionalSeries = seriesRepository.findById(id);
 
-                    if (updatedSeries.getGenre() != null && !updatedSeries.getGenre().trim().isEmpty()) {
-                        existingSeries.setGenre(updatedSeries.getGenre());
-                    }
+        if (optionalSeries.isEmpty()) {
+            return optionalSeries;
+        }
 
-                    if (updatedSeries.getReleaseYear() > 0) {
-                        existingSeries.setReleaseYear(updatedSeries.getReleaseYear());
-                    }
+        Series existingSeries = optionalSeries.get();
 
-                    if (updatedSeries.getSeasons() != null && !updatedSeries.getSeasons().isEmpty()) {
-                        if (existingSeries.getSeasons() == null) {
-                            existingSeries.setSeasons(new ArrayList<>());
-                        }
+        existingSeries.setCompleted(updatedSeries.isCompleted());
+        updateSeasons(existingSeries, updatedSeries.getSeasons());
 
-                        for (Season updatedSeason : updatedSeries.getSeasons()) {
-                            Optional<Season> existingSeason = existingSeries.getSeasons()
-                                    .stream()
-                                    .filter(s -> s.getSeasonNumber() == updatedSeason.getSeasonNumber())
-                                    .findFirst();
+        Series savedSeries = seriesRepository.save(existingSeries);
+        return Optional.of(savedSeries);
+    }
 
-                            if (existingSeason.isPresent()) {
-                                Season seasonToUpdate = existingSeason.get();
+    private void updateSeasons(Series existingSeries, List<SeasonDTO> seasons) {
+        if (seasons == null || seasons.isEmpty()) {
+            return;
+        }
 
-                                if (updatedSeason.getEpisodes() > 0) {
-                                    seasonToUpdate.setEpisodes(updatedSeason.getEpisodes());
-                                }
-                            } else {
+        if (existingSeries.getSeasons() == null) {
+            existingSeries.setSeasons(new ArrayList<>());
+        }
 
-                                if (updatedSeason.getSeasonNumber() > 0 && updatedSeason.getEpisodes() > 0) {
-                                    existingSeries.getSeasons().add(updatedSeason);
-                                }
-                            }
-                        }
+        for (SeasonDTO updatedSeasonDTO : seasons) {
+            Optional<Season> optionalSeason = existingSeries.getSeasons()
+                    .stream()
+                    .filter(s -> s.getSeasonNumber() == updatedSeasonDTO.getSeasonNumber())
+                    .findFirst();
 
-                        existingSeries.getSeasons().sort(Comparator.comparingInt(Season::getSeasonNumber));
-                    }
+            if (optionalSeason.isPresent()) {
+                Season seasonToUpdate = optionalSeason.get();
+                seasonToUpdate.setEpisodes(updatedSeasonDTO.getEpisodes());
+            } else {
+                existingSeries.getSeasons().add(Season.builder()
+                        .seasonNumber(updatedSeasonDTO.getSeasonNumber())
+                        .episodes(updatedSeasonDTO.getEpisodes())
+                        .build());
+            }
+        }
 
-                        return seriesRepository.save(existingSeries);
-                });
+        existingSeries.getSeasons().sort(Comparator.comparingInt(Season::getSeasonNumber));
     }
 
     public void deleteSeries(String id) {

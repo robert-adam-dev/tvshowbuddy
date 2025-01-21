@@ -11,12 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SeriesDTO {
-    private String id;
-    private String name;
-    private String genre;
-    private int releaseYear;
+public class SeriesUpdateDTO {
     private List<SeasonDTO> seasons;
     private boolean completed;
-
 }

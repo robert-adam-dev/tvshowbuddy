@@ -2,6 +2,7 @@ package br.com.tvshowbuddy.mapper;
 
 import br.com.tvshowbuddy.dto.SeasonDTO;
 import br.com.tvshowbuddy.dto.SeriesDTO;
+import br.com.tvshowbuddy.dto.SeriesSummaryDTO;
 import br.com.tvshowbuddy.model.Season;
 import br.com.tvshowbuddy.model.Series;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,7 @@ public class SeriesMapper {
                                 .map(this::seasonToEntity)
                                 .toList() :
                         null)
+                .completed(dto.isCompleted())
                 .build();
     }
 
@@ -38,6 +40,7 @@ public class SeriesMapper {
                                 .map(this::seasonToDTO)
                                 .toList() :
                         null)
+                .completed(entity.isCompleted())
                 .build();
     }
 
@@ -56,6 +59,17 @@ public class SeriesMapper {
         return SeasonDTO.builder()
                 .seasonNumber(entity.getSeasonNumber())
                 .episodes(entity.getEpisodes())
+                .build();
+    }
+
+    public SeriesSummaryDTO toSeriesSummaryDTO(Series entity) {
+        if (entity == null) return null;
+
+        return SeriesSummaryDTO.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .numberOfSeasons(entity.getSeasons().size())
+                .completed(entity.isCompleted())
                 .build();
     }
 }

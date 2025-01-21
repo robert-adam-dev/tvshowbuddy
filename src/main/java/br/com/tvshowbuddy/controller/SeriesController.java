@@ -1,8 +1,10 @@
 package br.com.tvshowbuddy.controller;
 
 import br.com.tvshowbuddy.dto.SeriesDTO;
+import br.com.tvshowbuddy.dto.SeriesUpdateDTO;
 import br.com.tvshowbuddy.mapper.SeriesMapper;
 import br.com.tvshowbuddy.model.Series;
+import br.com.tvshowbuddy.dto.SeriesSummaryDTO;
 import br.com.tvshowbuddy.service.SeriesService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +18,7 @@ import java.util.Optional;
 @RequestMapping("/series")
 @Slf4j
 @RequiredArgsConstructor
-public class SerieController {
+public class SeriesController {
 
     private final SeriesService seriesService;
     private final SeriesMapper seriesMapper;
@@ -29,13 +31,13 @@ public class SerieController {
     }
 
     @GetMapping
-    public ResponseEntity<List<SeriesDTO>> getAllSeries() {
+    public ResponseEntity<List<SeriesSummaryDTO>> getAllSeries() {
         List<Series> seriesList = seriesService.listAllSeries();
-        List<SeriesDTO> seriesDTOs = seriesList.stream()
-                .map(seriesMapper::toDTO)
+        List<SeriesSummaryDTO> seriesSummaryDTOs = seriesList.stream()
+                .map(seriesMapper::toSeriesSummaryDTO)
                 .toList();
 
-        return ResponseEntity.ok(seriesDTOs);
+        return ResponseEntity.ok(seriesSummaryDTOs);
     }
 
 
@@ -49,9 +51,8 @@ public class SerieController {
     @PatchMapping("/{id}")
     public ResponseEntity<SeriesDTO> updateSeries(
             @PathVariable String id,
-            @RequestBody SeriesDTO updatedSeriesDTO) {
-        Series updatedSeries = seriesMapper.toEntity(updatedSeriesDTO);
-        Optional<Series> updated = seriesService.updateSeries(id, updatedSeries);
+            @RequestBody SeriesUpdateDTO updatedSeriesDTO) {
+        Optional<Series> updated = seriesService.updateSeries(id, updatedSeriesDTO);
         return updated.map(s -> ResponseEntity.ok(seriesMapper.toDTO(s)))
                 .orElse(ResponseEntity.notFound().build());
     }

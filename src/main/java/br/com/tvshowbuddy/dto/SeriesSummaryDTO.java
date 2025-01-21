@@ -5,18 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SeriesDTO {
+public class SeriesSummaryDTO {
     private String id;
     private String name;
-    private String genre;
-    private int releaseYear;
-    private List<SeasonDTO> seasons;
+    private int numberOfSeasons;
     private boolean completed;
-
 }
