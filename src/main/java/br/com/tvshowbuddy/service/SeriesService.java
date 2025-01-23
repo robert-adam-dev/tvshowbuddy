@@ -2,6 +2,7 @@ package br.com.tvshowbuddy.service;
 
 import br.com.tvshowbuddy.dto.SeasonDTO;
 import br.com.tvshowbuddy.dto.SeriesUpdateDTO;
+import br.com.tvshowbuddy.exception.SeriesNotFoundException;
 import br.com.tvshowbuddy.model.Season;
 import br.com.tvshowbuddy.model.Series;
 import br.com.tvshowbuddy.repository.SeriesRepository;
@@ -28,17 +29,18 @@ public class SeriesService {
         return seriesRepository.findAll();
     }
 
-    public Optional<Series> findById(String id) {
-        return seriesRepository.findById(id);
+    public Series findById(String id) {
+        return seriesRepository.findById(id)
+                .orElseThrow(() -> new SeriesNotFoundException(id));
     }
 
     @Transactional
-    public Optional<Series> updateSeries(String id, SeriesUpdateDTO updatedSeries) {
+    public Series updateSeries(String id, SeriesUpdateDTO updatedSeries) {
 
         Optional<Series> optionalSeries = seriesRepository.findById(id);
 
         if (optionalSeries.isEmpty()) {
-            return optionalSeries;
+            throw new SeriesNotFoundException(id);
         }
 
         Series existingSeries = optionalSeries.get();
@@ -46,8 +48,7 @@ public class SeriesService {
         existingSeries.setCompleted(updatedSeries.isCompleted());
         updateSeasons(existingSeries, updatedSeries.getSeasons());
 
-        Series savedSeries = seriesRepository.save(existingSeries);
-        return Optional.of(savedSeries);
+        return seriesRepository.save(existingSeries);
     }
 
     private void updateSeasons(Series existingSeries, List<SeasonDTO> seasons) {
@@ -80,6 +81,9 @@ public class SeriesService {
     }
 
     public void deleteSeries(String id) {
+        if (!seriesRepository.existsById(id)) {
+            throw new SeriesNotFoundException(id);
+        }
         seriesRepository.deleteById(id);
     }
 }
