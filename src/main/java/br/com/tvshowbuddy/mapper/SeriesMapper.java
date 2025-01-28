@@ -1,7 +1,8 @@
 package br.com.tvshowbuddy.mapper;
 
 import br.com.tvshowbuddy.dto.SeasonDTO;
-import br.com.tvshowbuddy.dto.SeriesDTO;
+import br.com.tvshowbuddy.dto.SeriesCreateDTO;
+import br.com.tvshowbuddy.dto.SeriesResponseDTO;
 import br.com.tvshowbuddy.dto.SeriesSummaryDTO;
 import br.com.tvshowbuddy.model.Season;
 import br.com.tvshowbuddy.model.Series;
@@ -10,11 +11,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class SeriesMapper {
 
-    public Series toEntity(SeriesDTO dto) {
+    public Series toEntity(SeriesCreateDTO dto) {
         if (dto == null) return null;
 
         return Series.builder()
-                .id(dto.getId())
                 .name(dto.getName())
                 .genre(dto.getGenre())
                 .releaseYear(dto.getReleaseYear())
@@ -27,10 +27,10 @@ public class SeriesMapper {
                 .build();
     }
 
-    public SeriesDTO toDTO(Series entity) {
+    public SeriesResponseDTO toDTO(Series entity) {
         if (entity == null) return null;
 
-        return SeriesDTO.builder()
+        return SeriesResponseDTO.builder()
                 .id(entity.getId())
                 .name(entity.getName())
                 .genre(entity.getGenre())

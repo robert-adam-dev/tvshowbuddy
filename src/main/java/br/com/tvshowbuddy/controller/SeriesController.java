@@ -1,65 +1,66 @@
 package br.com.tvshowbuddy.controller;
 
-import br.com.tvshowbuddy.dto.SeriesDTO;
-import br.com.tvshowbuddy.dto.SeriesUpdateDTO;
-import br.com.tvshowbuddy.mapper.SeriesMapper;
-import br.com.tvshowbuddy.model.Series;
+import br.com.tvshowbuddy.dto.SeriesCreateDTO;
+import br.com.tvshowbuddy.dto.SeriesResponseDTO;
 import br.com.tvshowbuddy.dto.SeriesSummaryDTO;
+import br.com.tvshowbuddy.dto.SeriesUpdateDTO;
 import br.com.tvshowbuddy.service.SeriesService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/series")
+@RequestMapping("/v1/series")
 @Slf4j
 @RequiredArgsConstructor
 public class SeriesController {
 
+    public static final String APPLICATION_JSON = "application/json";
     private final SeriesService seriesService;
-    private final SeriesMapper seriesMapper;
 
-    @PostMapping
-    public ResponseEntity<SeriesDTO> createSeries(@RequestBody SeriesDTO seriesDTO) {
-        Series series = seriesMapper.toEntity(seriesDTO);
-        Series createdSeries = seriesService.createANewSeries(series);
-        return ResponseEntity.ok(seriesMapper.toDTO(createdSeries));
+    @PostMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
+    public ResponseEntity<SeriesResponseDTO> createSeries(@RequestBody SeriesCreateDTO seriesCreateDTO) {
+        log.info("Received request to create a new series");
+        SeriesResponseDTO series = seriesService.createANewSeries(seriesCreateDTO);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(series.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).body(series);
     }
 
-    @GetMapping
+    @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<List<SeriesSummaryDTO>> getAllSeries() {
-        List<Series> seriesList = seriesService.listAllSeries();
-        List<SeriesSummaryDTO> seriesSummaryDTOs = seriesList.stream()
-                .map(seriesMapper::toSeriesSummaryDTO)
-                .toList();
-
-        return ResponseEntity.ok(seriesSummaryDTOs);
+        log.info("Received request to retrieve all series");
+        return ResponseEntity.ok(seriesService.listAllSeries());
     }
 
-
-    @GetMapping("/{id}")
-    public ResponseEntity<SeriesDTO> getSeriesById(@PathVariable String id) {
-        Optional<Series> series = seriesService.findById(id);
-        return series.map(s -> ResponseEntity.ok(seriesMapper.toDTO(s)))
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping(path = "/{id}", produces = APPLICATION_JSON)
+    public ResponseEntity<SeriesResponseDTO> getSeriesById(@PathVariable String id) {
+        log.info("Received request to retrieve series with ID: {}", id);
+        return ResponseEntity.ok(seriesService.findById(id));
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<SeriesDTO> updateSeries(
-            @PathVariable String id,
-            @RequestBody SeriesUpdateDTO updatedSeriesDTO) {
-        Optional<Series> updated = seriesService.updateSeries(id, updatedSeriesDTO);
-        return updated.map(s -> ResponseEntity.ok(seriesMapper.toDTO(s)))
-                .orElse(ResponseEntity.notFound().build());
+    @PatchMapping(path = "/{id}", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
+    public ResponseEntity<SeriesResponseDTO> updateSeries(@PathVariable String id,
+                                                          @RequestBody SeriesUpdateDTO updatedSeriesDTO) {
+        log.info("Received request to update series with ID: {}", id);
+        return ResponseEntity.ok().body(seriesService.updateSeries(id, updatedSeriesDTO));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSeries(@PathVariable String id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteSeries(@PathVariable String id) {
+        log.info("Received request to delete series with ID: {}", id);
         seriesService.deleteSeries(id);
-        return ResponseEntity.noContent().build();
     }
 }
