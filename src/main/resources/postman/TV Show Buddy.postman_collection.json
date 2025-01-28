@@ -24,13 +24,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/series",
+					"raw": "http://localhost:8080/v1/series",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"v1",
 						"series"
 					]
 				}
@@ -52,13 +53,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/series",
+					"raw": "http://localhost:8080/v1/series",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"v1",
 						"series"
 					]
 				}
@@ -80,13 +82,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/series",
+					"raw": "http://localhost:8080/v1/series",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"v1",
 						"series"
 					]
 				}
@@ -108,13 +111,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/series",
+					"raw": "http://localhost:8080/v1/series",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"v1",
 						"series"
 					]
 				}
@@ -139,20 +143,21 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/series/:id",
+					"raw": "http://localhost:8080/v1/series/:id",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"v1",
 						"series",
 						":id"
 					],
 					"variable": [
 						{
 							"key": "id",
-							"value": "678ee324fed40831f2b1f9c4",
+							"value": "67982749d781af098a883c72",
 							"description": "Required. Inform the series ID"
 						}
 					]
@@ -175,20 +180,21 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/series/:id",
+					"raw": "http://localhost:8080/v1/series/:id",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"v1",
 						"series",
 						":id"
 					],
 					"variable": [
 						{
 							"key": "id",
-							"value": "678efd845c7b2f6a4577d4a2",
+							"value": "67982749d781af098a883c72",
 							"description": "Required. Inform the series ID"
 						}
 					]
@@ -211,20 +217,21 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/series/:id",
+					"raw": "http://localhost:8080/v1/series/:id",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"v1",
 						"series",
 						":id"
 					],
 					"variable": [
 						{
 							"key": "id",
-							"value": "678ee324fed40831f2b1f9c4",
+							"value": "67982720d781af098a883c70",
 							"description": "Required. Inform the series ID"
 						}
 					]
