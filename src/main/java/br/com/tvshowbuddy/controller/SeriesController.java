@@ -1,10 +1,9 @@
 package br.com.tvshowbuddy.controller;
 
-import br.com.tvshowbuddy.dto.SeriesDTO;
+import br.com.tvshowbuddy.dto.SeriesCreateDTO;
+import br.com.tvshowbuddy.dto.SeriesResponseDTO;
 import br.com.tvshowbuddy.dto.SeriesSummaryDTO;
 import br.com.tvshowbuddy.dto.SeriesUpdateDTO;
-import br.com.tvshowbuddy.mapper.SeriesMapper;
-import br.com.tvshowbuddy.model.Series;
 import br.com.tvshowbuddy.service.SeriesService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,57 +16,51 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/series")
+@RequestMapping("/v1/series")
 @Slf4j
 @RequiredArgsConstructor
 public class SeriesController {
 
+    public static final String APPLICATION_JSON = "application/json";
     private final SeriesService seriesService;
-    private final SeriesMapper seriesMapper;
 
-    @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<SeriesDTO> createSeries(@RequestBody SeriesDTO seriesDTO) {
-
-        Series series = seriesMapper.toEntity(seriesDTO);
-        Series createdSeries = seriesService.createANewSeries(series);
+    @PostMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
+    public ResponseEntity<SeriesResponseDTO> createSeries(@RequestBody SeriesCreateDTO seriesCreateDTO) {
+        log.info("Received request to create a new series");
+        SeriesResponseDTO series = seriesService.createANewSeries(seriesCreateDTO);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(createdSeries.getId())
+                .buildAndExpand(series.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).body(seriesMapper.toDTO(createdSeries));
+        return ResponseEntity.created(location).body(series);
     }
 
-    @GetMapping(produces = "application/json")
+    @GetMapping(produces = APPLICATION_JSON)
     public ResponseEntity<List<SeriesSummaryDTO>> getAllSeries() {
-        List<Series> seriesList = seriesService.listAllSeries();
-        List<SeriesSummaryDTO> seriesSummaryDTOs = seriesList.stream()
-                .map(seriesMapper::toSeriesSummaryDTO)
-                .toList();
-
-        return ResponseEntity.ok(seriesSummaryDTOs);
+        log.info("Received request to retrieve all series");
+        return ResponseEntity.ok(seriesService.listAllSeries());
     }
 
-
-    @GetMapping(path = "/{id}", produces = "application/json")
-    public ResponseEntity<SeriesDTO> getSeriesById(@PathVariable String id) {
-        Series series = seriesService.findById(id);
-        return ResponseEntity.ok(seriesMapper.toDTO(series));
+    @GetMapping(path = "/{id}", produces = APPLICATION_JSON)
+    public ResponseEntity<SeriesResponseDTO> getSeriesById(@PathVariable String id) {
+        log.info("Received request to retrieve series with ID: {}", id);
+        return ResponseEntity.ok(seriesService.findById(id));
     }
 
-    @PatchMapping(path = "/{id}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<SeriesDTO> updateSeries(@PathVariable String id,
-                                                  @RequestBody SeriesUpdateDTO updatedSeriesDTO) {
-
-        Series series = seriesService.updateSeries(id, updatedSeriesDTO);
-        return ResponseEntity.ok().body(seriesMapper.toDTO(series));
+    @PatchMapping(path = "/{id}", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
+    public ResponseEntity<SeriesResponseDTO> updateSeries(@PathVariable String id,
+                                                          @RequestBody SeriesUpdateDTO updatedSeriesDTO) {
+        log.info("Received request to update series with ID: {}", id);
+        return ResponseEntity.ok().body(seriesService.updateSeries(id, updatedSeriesDTO));
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteSeries(@PathVariable String id) {
+        log.info("Received request to delete series with ID: {}", id);
         seriesService.deleteSeries(id);
     }
 }

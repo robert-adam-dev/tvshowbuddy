@@ -1,12 +1,13 @@
 package br.com.tvshowbuddy.service;
 
-import br.com.tvshowbuddy.dto.SeasonDTO;
-import br.com.tvshowbuddy.dto.SeriesUpdateDTO;
+import br.com.tvshowbuddy.dto.*;
 import br.com.tvshowbuddy.exception.SeriesNotFoundException;
+import br.com.tvshowbuddy.mapper.SeriesMapper;
 import br.com.tvshowbuddy.model.Season;
 import br.com.tvshowbuddy.model.Series;
 import br.com.tvshowbuddy.repository.SeriesRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,42 +18,48 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SeriesService {
 
     private final SeriesRepository seriesRepository;
+    private final SeriesMapper seriesMapper;
 
-    public Series createANewSeries(Series series) {
-        return seriesRepository.save(series);
+    public SeriesResponseDTO createANewSeries(SeriesCreateDTO seriesCreateDTO) {
+        Series series = seriesMapper.toEntity(seriesCreateDTO);
+        Series createdSeries = seriesRepository.save(series);
+        log.info("Series created successfully with ID: {}", createdSeries.getId());
+        return seriesMapper.toDTO(createdSeries);
     }
 
-    public List<Series> listAllSeries() {
-        return seriesRepository.findAll();
+    public List<SeriesSummaryDTO> listAllSeries() {
+        List<Series> seriesList = seriesRepository.findAll();
+        log.info("Successfully retrieved {} series", seriesList.size());
+        return seriesList.stream()
+                .map(seriesMapper::toSeriesSummaryDTO)
+                .toList();
     }
 
-    public Series findById(String id) {
-        return seriesRepository.findById(id)
-                .orElseThrow(() -> new SeriesNotFoundException(id));
+    public SeriesResponseDTO findById(String id) {
+        Series series = findSeriesOrThrowException(id);
+        log.info("Series with ID: {} retrieved successfully", id);
+        return seriesMapper.toDTO(series);
     }
 
     @Transactional
-    public Series updateSeries(String id, SeriesUpdateDTO updatedSeries) {
-
-        Optional<Series> optionalSeries = seriesRepository.findById(id);
-
-        if (optionalSeries.isEmpty()) {
-            throw new SeriesNotFoundException(id);
-        }
-
-        Series existingSeries = optionalSeries.get();
-
+    public SeriesResponseDTO updateSeries(String id, SeriesUpdateDTO updatedSeries) {
+        Series existingSeries = findSeriesOrThrowException(id);
+        log.debug("Updating series with ID: {}. New status: {}, Seasons: {}",
+                id, updatedSeries.isCompleted(), updatedSeries.getSeasons());
         existingSeries.setCompleted(updatedSeries.isCompleted());
         updateSeasons(existingSeries, updatedSeries.getSeasons());
-
-        return seriesRepository.save(existingSeries);
+        Series updatedEntity = seriesRepository.save(existingSeries);
+        log.info("Series with ID: {} updated successfully", id);
+        return seriesMapper.toDTO(updatedEntity);
     }
 
     private void updateSeasons(Series existingSeries, List<SeasonDTO> seasons) {
         if (seasons == null || seasons.isEmpty()) {
+            log.debug("No seasons to update for series ID: {}", existingSeries.getId());
             return;
         }
 
@@ -69,21 +76,32 @@ public class SeriesService {
             if (optionalSeason.isPresent()) {
                 Season seasonToUpdate = optionalSeason.get();
                 seasonToUpdate.setEpisodes(updatedSeasonDTO.getEpisodes());
+                log.debug("Updated season {} for series ID: {}", seasonToUpdate.getSeasonNumber(), existingSeries.getId());
             } else {
-                existingSeries.getSeasons().add(Season.builder()
+                Season newSeason = Season.builder()
                         .seasonNumber(updatedSeasonDTO.getSeasonNumber())
                         .episodes(updatedSeasonDTO.getEpisodes())
-                        .build());
+                        .build();
+                existingSeries.getSeasons().add(newSeason);
+                log.debug("Added new season {} for series ID: {}", newSeason.getSeasonNumber(), existingSeries.getId());
             }
         }
 
         existingSeries.getSeasons().sort(Comparator.comparingInt(Season::getSeasonNumber));
+        log.info("Seasons updated and sorted for series ID: {}", existingSeries.getId());
     }
 
     public void deleteSeries(String id) {
-        if (!seriesRepository.existsById(id)) {
-            throw new SeriesNotFoundException(id);
-        }
+        findSeriesOrThrowException(id);
         seriesRepository.deleteById(id);
+        log.info("Series with ID: {} deleted successfully", id);
+    }
+
+    private Series findSeriesOrThrowException(String id) {
+        return seriesRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.warn("Series with ID: {} not found", id);
+                    return new SeriesNotFoundException(id);
+                });
     }
 }
