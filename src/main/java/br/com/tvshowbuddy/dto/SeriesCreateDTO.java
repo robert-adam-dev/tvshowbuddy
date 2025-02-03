@@ -36,7 +36,7 @@ public class SeriesCreateDTO {
     private Boolean completed;
 
     @AssertTrue(message = "Release year cannot be in the future")
-    public boolean isValidYear() {
+    public boolean isInvalidReleaseYear() {
         return releaseYear <= Year.now().getValue();
     }
 }
