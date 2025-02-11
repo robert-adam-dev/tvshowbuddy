@@ -1,5 +1,6 @@
 package br.com.tvshowbuddy.model;
 
+import br.com.tvshowbuddy.dto.SeriesGenre;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +18,7 @@ public class Series {
     @Id
     private String id;
     private String name;
-    private String genre;
+    private List<SeriesGenre> genres;
     private int releaseYear;
     private List<Season> seasons;
     private boolean completed;

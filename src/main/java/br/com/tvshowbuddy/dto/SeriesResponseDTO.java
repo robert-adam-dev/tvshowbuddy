@@ -14,7 +14,7 @@ import java.util.List;
 public class SeriesResponseDTO {
     private String id;
     private String name;
-    private String genre;
+    private List<SeriesGenre> genres;
     private int releaseYear;
     private List<SeasonDTO> seasons;
     private boolean completed;

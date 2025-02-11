@@ -16,14 +16,14 @@ public class SeriesMapper {
 
         return Series.builder()
                 .name(dto.getName())
-                .genre(dto.getGenre())
+                .genres(dto.getGenres())
                 .releaseYear(dto.getReleaseYear())
                 .seasons(dto.getSeasons() != null ?
                         dto.getSeasons().stream()
                                 .map(this::seasonToEntity)
                                 .toList() :
                         null)
-                .completed(dto.isCompleted())
+                .completed(dto.getCompleted())
                 .build();
     }
 
@@ -33,7 +33,7 @@ public class SeriesMapper {
         return SeriesResponseDTO.builder()
                 .id(entity.getId())
                 .name(entity.getName())
-                .genre(entity.getGenre())
+                .genres(entity.getGenres())
                 .releaseYear(entity.getReleaseYear())
                 .seasons(entity.getSeasons() != null ?
                         entity.getSeasons().stream()

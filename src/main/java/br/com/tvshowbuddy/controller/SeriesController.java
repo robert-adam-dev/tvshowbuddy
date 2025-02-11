@@ -5,6 +5,7 @@ import br.com.tvshowbuddy.dto.SeriesResponseDTO;
 import br.com.tvshowbuddy.dto.SeriesSummaryDTO;
 import br.com.tvshowbuddy.dto.SeriesUpdateDTO;
 import br.com.tvshowbuddy.service.SeriesService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class SeriesController {
     private final SeriesService seriesService;
 
     @PostMapping(consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
-    public ResponseEntity<SeriesResponseDTO> createSeries(@RequestBody SeriesCreateDTO seriesCreateDTO) {
+    public ResponseEntity<SeriesResponseDTO> createSeries(@RequestBody @Valid SeriesCreateDTO seriesCreateDTO) {
         log.info("Received request to create a new series");
         SeriesResponseDTO series = seriesService.createANewSeries(seriesCreateDTO);
 
@@ -52,7 +53,7 @@ public class SeriesController {
 
     @PatchMapping(path = "/{id}", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)
     public ResponseEntity<SeriesResponseDTO> updateSeries(@PathVariable String id,
-                                                          @RequestBody SeriesUpdateDTO updatedSeriesDTO) {
+                                                          @RequestBody @Valid SeriesUpdateDTO updatedSeriesDTO) {
         log.info("Received request to update series with ID: {}", id);
         return ResponseEntity.ok().body(seriesService.updateSeries(id, updatedSeriesDTO));
     }
